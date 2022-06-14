@@ -1,0 +1,112 @@
+{
+    "dataRoles": [
+        {
+            "displayName": "Activity",
+            "name": "activity",
+            "kind": "Grouping"
+        },
+        {
+            "displayName": "Plan Date",
+            "name": "planDate",
+            "kind": "Grouping"
+        },
+        {
+            "displayName": "Real Date",
+            "name": "realDate",
+            "kind": "Grouping"
+        }
+    ],
+    "objects": {
+        "line": {
+            "displayName": "Data colors",
+            "properties": {
+                "planColor": {
+                    "displayName": "Plan Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "realColor": {
+                    "displayName": "Real Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "fontColor": {
+                    "displayName": "Text Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                 "fontSize": {
+                    "displayName": "Text Size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "dataViewMappings": [
+        {
+            "conditions": [
+                {
+                    "category":
+                    {
+                        "max": 1
+                    },
+                    "measure":
+                    {
+                        "max": 1
+                    }
+                } 
+            ],
+            
+            "table": {
+                "rows": {
+                    "select": [
+                        {
+                            "bind":{
+                                "to": "activity"
+                            }
+                        },
+                        {
+                            "bind":{
+                                "to": "planDate"
+                            }
+                        },
+                        {
+                            "bind":{
+                                "to": "realDate"
+                            }
+                        }
+                    ]
+                },
+                "rowCount":{
+                    "preferred": {
+                        "min": 100,
+                        "max": 200
+                    },
+                    "supported": {
+                        "min": 0,
+                        "max": 300
+                    }
+                }                
+            }
+        }
+    ]
+}
