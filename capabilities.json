@@ -99,11 +99,11 @@
                 "rowCount":{
                     "preferred": {
                         "min": 100,
-                        "max": 200
+                        "max": 20000
                     },
                     "supported": {
                         "min": 0,
-                        "max": 300
+                        "max": 30000
                     }
                 }                
             }
