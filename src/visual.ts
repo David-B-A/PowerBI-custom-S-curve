@@ -57,23 +57,9 @@ export class Visual implements IVisual {
         this.target = options.element;
         this.updateCount = 0;
         if (document) {
-            // const new_p: HTMLElement = document.createElement("p");
-            // new_p.appendChild(document.createTextNode("Chart:"));
-            
-            const chart: HTMLElement = document.createElement("div");
-            chart.setAttribute("id", "chart");
-            const canvas: HTMLElement = document.createElement("canvas");
-            canvas.setAttribute("id", "canvas");
-            chart.appendChild(canvas);
-            this.target.appendChild(chart);
-            // new_p.appendChild(chart);
-            // this.target.appendChild(new_p);
-
-            // const new_em: HTMLElement = document.createElement("em");
-            // this.textNode = document.createTextNode(this.updateCount.toString());
-            // new_em.appendChild(this.textNode);
-            // new_p.appendChild(new_em);
-            // this.target.appendChild(new_p);
+            const chartTag: HTMLElement = document.createElement("div");
+            chartTag.setAttribute("id", "chart");
+            this.target.appendChild(chartTag);
         }
     }
 
@@ -110,7 +96,12 @@ export class Visual implements IVisual {
         let max = maxPlan > maxReal ? maxPlan : maxReal; // last date
         max.setDate(max.getDate() + 5 - max.getDay() + 7) // last Friday
 
-        let interval = 7 * Math.ceil((max.getTime() - min.getTime()) / (1000 * 60 * 60 * 24) / 700);
+        const interval = 7 * Math.ceil((max.getTime() - min.getTime()) / (1000 * 60 * 60 * 24) / 700);
+        const intervals = Math.ceil((max.getTime() - min.getTime()) / (1000 * 60 * 60 * 24) / interval);
+        
+        if(!intervals) {
+            return [];
+        }
 
         let tempDate = min;
         const today = new Date();
@@ -141,6 +132,7 @@ export class Visual implements IVisual {
     }
 
     public update(options: VisualUpdateOptions) {
+
         this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
         this.visualSettings = VisualSettings.parse<VisualSettings>(options.dataViews[0]);
         let data = [];
@@ -150,7 +142,18 @@ export class Visual implements IVisual {
             return;
         }
         let ChartJS = (<any>window).Chart;
+
+        // recreating canvas every time the data changes
         let canvas = document.getElementById("canvas") as HTMLCanvasElement | null;
+        if (canvas) {
+            canvas.remove();
+        }
+        canvas = document.createElement("canvas");
+        canvas.setAttribute("id", "canvas");
+        
+        let chartTag = document.getElementById("chart") as HTMLElement | null;
+        chartTag.appendChild(canvas);
+
         let ctx = canvas?.getContext("2d");
         Chart.defaults.color = this.visualSettings.line.fontColor;
         let chart = new ChartJS(
@@ -174,13 +177,9 @@ export class Visual implements IVisual {
                 },
                 options: {
                     responsive: true,
-                    tooltips: {
+                    interaction: {
+                        intersect: false,
                         mode: 'index',
-                        intersect: false
-                    },
-                    hover: {
-                        mode: 'index',
-                        intersect: false
                     },
                     scales: {
                         x: {
@@ -208,7 +207,7 @@ export class Visual implements IVisual {
                                     size: this.visualSettings.line.fontSize
                                 }
                             }
-                        },
+                        }
                     }
                 }
             }
