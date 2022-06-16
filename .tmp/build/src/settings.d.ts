@@ -7,5 +7,6 @@ export declare class lineSettings {
     planColor: string;
     realColor: string;
     fontColor: string;
+    showTable: boolean;
     fontSize: number;
 }

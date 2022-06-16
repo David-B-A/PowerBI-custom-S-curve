@@ -57,6 +57,12 @@
                             "fontSize": true
                         }
                     }
+                },
+                "showTable": {
+                    "displayName": "Show Table",
+                    "type": {
+                        "bool": true
+                    }
                 }
             }
         }

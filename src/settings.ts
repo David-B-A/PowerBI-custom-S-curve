@@ -37,6 +37,7 @@ export class lineSettings {
       public planColor: string = "#11ff00";
       public realColor: string = "#ffff00";
       public fontColor: string = "#000000";
+      public showTable: boolean = true;
       public fontSize: number = 12;
      }
 

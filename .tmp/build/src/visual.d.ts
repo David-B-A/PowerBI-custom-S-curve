@@ -12,6 +12,12 @@ export declare class Visual implements IVisual {
     private settings;
     private textNode;
     private visualSettings;
+    private today;
+    private lastRealDate;
+    private todayPlan;
+    private todayReal;
+    private lastRealDatePlan;
+    private lastRealDateReal;
     private columnIndices;
     constructor(options: VisualConstructorOptions);
     private dataExtraction;
