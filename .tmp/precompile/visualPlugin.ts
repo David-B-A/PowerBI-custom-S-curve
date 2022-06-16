@@ -5,8 +5,8 @@ import VisualConstructorOptions = powerbiVisualsApi.extensibility.visual.VisualC
 import DialogConstructorOptions = powerbiVisualsApi.extensibility.visual.DialogConstructorOptions;
 var powerbiKey: any = "powerbi";
 var powerbi: any = window[powerbiKey];
-var sCurve68E291660A80407EA125459727A40E5F_DEBUG: IVisualPlugin = {
-    name: 'sCurve68E291660A80407EA125459727A40E5F_DEBUG',
+var sCurve68E291660A80407EA125459727A40E5F: IVisualPlugin = {
+    name: 'sCurve68E291660A80407EA125459727A40E5F',
     displayName: 'sCurve',
     class: 'Visual',
     apiVersion: '3.8.0',
@@ -27,6 +27,6 @@ var sCurve68E291660A80407EA125459727A40E5F_DEBUG: IVisualPlugin = {
 if (typeof powerbi !== "undefined") {
     powerbi.visuals = powerbi.visuals || {};
     powerbi.visuals.plugins = powerbi.visuals.plugins || {};
-    powerbi.visuals.plugins["sCurve68E291660A80407EA125459727A40E5F_DEBUG"] = sCurve68E291660A80407EA125459727A40E5F_DEBUG;
+    powerbi.visuals.plugins["sCurve68E291660A80407EA125459727A40E5F"] = sCurve68E291660A80407EA125459727A40E5F;
 }
-export default sCurve68E291660A80407EA125459727A40E5F_DEBUG;
+export default sCurve68E291660A80407EA125459727A40E5F;
