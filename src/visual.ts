@@ -151,6 +151,8 @@ export class Visual implements IVisual {
         canvas = document.createElement("canvas");
         canvas.setAttribute("id", "canvas");
         
+        canvas.style.height = (options.viewport.height - 10) + "px";
+        
         let chartTag = document.getElementById("chart") as HTMLElement | null;
         chartTag.appendChild(canvas);
 
@@ -177,6 +179,7 @@ export class Visual implements IVisual {
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     interaction: {
                         intersect: false,
                         mode: 'index',
