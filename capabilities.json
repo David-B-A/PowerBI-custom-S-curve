@@ -65,11 +65,15 @@
         {
             "conditions": [
                 {
-                    "category":
+                    "activity":
                     {
                         "max": 1
                     },
-                    "measure":
+                    "planDate":
+                    {
+                        "max": 1
+                    },
+                    "realDate":
                     {
                         "max": 1
                     }

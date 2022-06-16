@@ -55,10 +55,10 @@ export class Visual implements IVisual {
 
     constructor(options: VisualConstructorOptions) {
         this.target = options.element;
-        this.updateCount = 0;
         if (document) {
             const chartTag: HTMLElement = document.createElement("div");
             chartTag.setAttribute("id", "chart");
+            chartTag.style.overflowY = "auto";
             this.target.appendChild(chartTag);
         }
     }
