@@ -18,6 +18,7 @@ export declare class Visual implements IVisual {
     private todayReal;
     private lastRealDatePlan;
     private lastRealDateReal;
+    private host;
     private columnIndices;
     constructor(options: VisualConstructorOptions);
     private dataExtraction;

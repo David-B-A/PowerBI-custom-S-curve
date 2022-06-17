@@ -104,18 +104,14 @@
                                 "to": "realDate"
                             }
                         }
-                    ]
-                },
-                "rowCount":{
-                    "preferred": {
-                        "min": 100,
-                        "max": 20000
-                    },
-                    "supported": {
-                        "min": 0,
-                        "max": 30000
+                    ],
+                    "dataReductionAlgorithm": {
+                        "window": {
+                            "count": 30000
+                        }
                     }
-                }                
+                }
+                            
             }
         }
     ],

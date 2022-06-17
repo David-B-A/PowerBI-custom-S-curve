@@ -51,6 +51,7 @@ export class Visual implements IVisual {
     private todayReal: number;
     private lastRealDatePlan: number;
     private lastRealDateReal: number;
+    private host: powerbi.extensibility.visual.IVisualHost;
 
     private columnIndices: { "name": string, "index": number, "label": string, "type": string}[] = [
         { "name": "activity", "index": 0, "label": "Activity" , "type": "string"},
@@ -60,6 +61,7 @@ export class Visual implements IVisual {
 
 
     constructor(options: VisualConstructorOptions) {
+        this.host = options.host;
         this.today = new Date();
         this.target = options.element;
         if (document) {
@@ -189,23 +191,43 @@ export class Visual implements IVisual {
     }
 
     public update(options: VisualUpdateOptions) {
-
-        console.log(options);
-
         this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
         this.visualSettings = VisualSettings.parse<VisualSettings>(options.dataViews[0]);
+
+        //getting more data from window
+        if(options.dataViews[0].metadata.segment) {
+            let moreData = this.host.fetchMoreData();
+        }
+
+        // recreating canvas every time the data changes
+        let table = document.getElementById("table");
+        table.innerHTML = '';
+        let canvas = document.getElementById("canvas") as HTMLCanvasElement | null;
+        if (canvas) {
+            canvas.remove();
+        }
+        canvas = document.createElement("canvas");
+        canvas.setAttribute("id", "canvas");
+        let chartTag = document.getElementById("chart") as HTMLElement | null;
+        chartTag.appendChild(canvas);
+        
         let data = [];
         if (options.dataViews.length > 0) {
             data = this.dataExtraction(options.dataViews[0]);
         } else {
             return;
         }
+        
 
         // Heading table
-        let table = document.getElementById("table");
         if(this.visualSettings.line.showTable) {
         table.innerHTML = `
         <table style="margin: 0 auto">
+            <thead>
+                <tr>
+                    <th colspan="4" style="text-align: center">Total: ${options.dataViews[0].table.rows.length}</th>
+                </tr>
+            </thead>
             <tbody>
                 <tr>
                     <td><b>Today</b></td>
@@ -231,21 +253,8 @@ export class Visual implements IVisual {
         let tableHeight = table.clientHeight;
         ////////////////
 
-        let ChartJS = (<any>window).Chart;
-
-        // recreating canvas every time the data changes
-        let canvas = document.getElementById("canvas") as HTMLCanvasElement | null;
-        if (canvas) {
-            canvas.remove();
-        }
-        canvas = document.createElement("canvas");
-        canvas.setAttribute("id", "canvas");
-        
         canvas.style.height = (options.viewport.height - tableHeight - 20) + "px";
-        
-        let chartTag = document.getElementById("chart") as HTMLElement | null;
-        chartTag.appendChild(canvas);
-
+        let ChartJS = (<any>window).Chart;
         let ctx = canvas?.getContext("2d");
         Chart.defaults.color = this.visualSettings.line.fontColor;
         let chart = new ChartJS(
