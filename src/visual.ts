@@ -39,6 +39,7 @@ import VisualObjectInstanceEnumeration = powerbi.VisualObjectInstanceEnumeration
 
 import { VisualSettings } from "./settings";
 import { Chart } from "chart.js";
+import { html } from "d3";
 export class Visual implements IVisual {
     private target: HTMLElement;
     private updateCount: number;
@@ -102,11 +103,11 @@ export class Visual implements IVisual {
                 incommingData[name] = rows.map(row => row[this.columnIndices[i].index]);
             }
         }
-
-        let min = incommingData["planDate"].reduce((a, b) => a === null ? b : b === null ? a : a < b ? a : b);
+        
+        let min = new Date(incommingData["planDate"].reduce((a, b) => a === null ? b : b === null ? a : a < b ? a : b));
         min.setDate(min.getDate() + 5 - min.getDay()) // first Friday
-        let maxPlan = incommingData["planDate"].reduce((a, b) => a === null ? b : b === null ? a : a < b ? b : a);
-        let maxReal = incommingData["realDate"].reduce((a, b) => a === null ? b : b === null ? a : a < b ? b : a);
+        let maxPlan = new Date(incommingData["planDate"].reduce((a, b) => a === null ? b : b === null ? a : a < b ? b : a));
+        let maxReal = new Date(incommingData["realDate"].reduce((a, b) => a === null ? b : b === null ? a : a < b ? b : a));
         
         let max = maxPlan > maxReal ? maxPlan : maxReal; // last date
         max.setDate(max.getDate() + 5 - max.getDay() + 7) // last Friday
@@ -125,38 +126,31 @@ export class Visual implements IVisual {
         data["% Plan"] = [];
         data["% Real"] = [];
         const total = incommingData["activity"].length;
+
         while(tempDate <= max) {
             let countPlan = 0;
             let countReal = 0;
             for(let i = 0; i < total; i++) {
-                if(incommingData["planDate"][i] && incommingData["planDate"][i].getTime() <= tempDate.getTime()) {
+                if(incommingData["planDate"][i] && incommingData["planDate"][i] <= tempDate) {
                     countPlan++;
                 }
-                if(incommingData["realDate"][i] && incommingData["realDate"][i].getTime() <= tempDate.getTime() && incommingData["realDate"][i].getTime() <= this.today.getTime()) {
+                if(incommingData["realDate"][i] && incommingData["realDate"][i]  <= tempDate) {
                     countReal++;
                 }
             }
             data["date"].push(tempDate.toISOString().substring(0, 10));
+            // data["% Plan"].push(Math.round((countPlan / total * 100)*1000)/1000);
+            // data["% Real"].push(tempDate.getTime() <= this.today.getTime() ? Math.round((countReal / total * 100)*1000)/1000 : null);
+
             data["% Plan"].push(Math.round((countPlan / total * 100)*1000)/1000);
-            data["% Real"].push(tempDate.getTime() <= this.today.getTime() ? Math.round((countReal / total * 100)*1000)/1000 : null);
+            data["% Real"].push(Math.round((countReal / total * 100)*1000)/1000);
 
             tempDate.setDate(tempDate.getDate() + interval);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        let tempLastRealDate = incommingData["realDate"][0];
-        for (let i = 0; i < total; i++) {
-            if(tempLastRealDate === null) {
-                tempLastRealDate = incommingData["realDate"][i];
-            }
-            if(incommingData["realDate"][i] && incommingData["realDate"][i].getTime() <= this.today.getTime()) {
-                if(tempLastRealDate.getTime() < incommingData["realDate"][i].getTime()) {
-                    tempLastRealDate = incommingData["realDate"][i];
-                }
-            }
-        }
-        this.lastRealDate = tempLastRealDate;
+        this.lastRealDate = maxReal;
 
         let todayCountPlan = 0;
         let todayCountReal = 0;
@@ -184,9 +178,9 @@ export class Visual implements IVisual {
         this.todayReal = Math.round((todayCountReal / total * 100)*100)/100;
         this.lastRealDatePlan = Math.round((lastRealDateCountPlan / total * 100)*100)/100;
         this.lastRealDateReal = Math.round((lastRealDateCountReal / total * 100)*100)/100;
-
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        data["incomingData"] = incommingData;
         return data;
     }
 
@@ -225,7 +219,7 @@ export class Visual implements IVisual {
         <table style="margin: 0 auto">
             <thead>
                 <tr>
-                    <th colspan="4" style="text-align: center">Total: ${options.dataViews[0].table.rows.length}</th>
+                    <th colspan="5" style="text-align: center">Total: ${data["incomingData"]["activity"].length}</th>
                 </tr>
             </thead>
             <tbody>
@@ -234,12 +228,14 @@ export class Visual implements IVisual {
                     <td style="padding-left:2rem">${this.today.toISOString().substring(0,10)}</td>
                     <td style="padding-left:2rem">Plan: ${this.todayPlan}%</td>
                     <td style="padding-left:2rem">Real: ${this.todayReal}%</td>
+                    <td style="padding-left:2rem">Execution: ${(this.todayReal/this.todayPlan).toFixed(2)}</td>
                 </tr>
                 <tr>
                     <td><b>Last execution date</b></td>
                     <td style="padding-left:2rem">${this.lastRealDate.toISOString().substring(0,10)}</td>
                     <td style="padding-left:2rem">Plan: ${this.lastRealDatePlan}%</td>
                     <td style="padding-left:2rem">Real: ${this.lastRealDateReal}%</td>
+                    <td style="padding-left:2rem">Execution: ${(this.lastRealDateReal/this.lastRealDatePlan).toFixed(2)}</td>
                 </tr>
             </tbody>
         </table>
