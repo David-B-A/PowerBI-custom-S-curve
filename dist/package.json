@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "author": {"name":"OilNet Software S.A.S.","email":"david.bello@oilnetsoftware.com"},
     "resources": [
         {
@@ -8,7 +8,7 @@
             "file": "resources/sCurve68E291660A80407EA125459727A40E5F.pbiviz.json"
         }
     ],
-    "visual": {"name":"sCurve","displayName":"sCurve","guid":"sCurve68E291660A80407EA125459727A40E5F","visualClassName":"Visual","version":"1.0.0","description":"S Curve from a list of Activities with plan and real date with Charts.js","supportUrl":"https://github.com/David-B-A/PowerBI-custom-S-curve.git","gitHubUrl":"https://github.com/David-B-A/PowerBI-custom-S-curve.git"},
+    "visual": {"name":"sCurve","displayName":"sCurve","guid":"sCurve68E291660A80407EA125459727A40E5F","visualClassName":"Visual","version":"1.0.1","description":"S Curve from a list of Activities with plan and real date with Charts.js","supportUrl":"https://github.com/David-B-A/PowerBI-custom-S-curve.git","gitHubUrl":"https://github.com/David-B-A/PowerBI-custom-S-curve.git"},
     "metadata": {
         "pbivizjson": {
             "resourceId": "rId0"
