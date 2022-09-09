@@ -139,11 +139,8 @@ export class Visual implements IVisual {
                 }
             }
             data["date"].push(tempDate.toISOString().substring(0, 10));
-            // data["% Plan"].push(Math.round((countPlan / total * 100)*1000)/1000);
-            // data["% Real"].push(tempDate.getTime() <= this.today.getTime() ? Math.round((countReal / total * 100)*1000)/1000 : null);
-
             data["% Plan"].push(Math.round((countPlan / total * 100)*1000)/1000);
-            data["% Real"].push(Math.round((countReal / total * 100)*1000)/1000);
+            data["% Real"].push(tempDate.getTime() <= this.today.getTime() ? Math.round((countReal / total * 100)*1000)/1000 : null);
 
             tempDate.setDate(tempDate.getDate() + interval);
         }
